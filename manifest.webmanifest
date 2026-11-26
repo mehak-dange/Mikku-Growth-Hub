@@ -1,0 +1,18 @@
+{
+  "name": "Mikku Growth Hub",
+  "short_name": "Growth Hub",
+  "description": "Personal study, placement and wellness planner",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f6fb",
+  "theme_color": "#30245f",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

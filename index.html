@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#30245f">
+  <meta name="description" content="Mikku's personal study, placement and wellness planner.">
+  <title>Mikku Growth Hub</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="brand-icon">✦</div><div><strong>Mikku Growth Hub</strong><small>Study • Build • Grow</small></div></div>
+  <div class="top-actions"><span id="syncStatus" class="sync-pill">● Local mode</span><button id="installBtn" class="btn btn-light hidden">Install app</button><button id="logoutBtn" class="btn btn-light hidden">Sign out</button></div>
+</header>
+
+<main class="wrap">
+  <section id="authPanel" class="panel auth-panel">
+    <div class="auth-copy"><span class="eyebrow">YOUR PERSONAL COMMAND CENTRE</span><h1>Small steps.<br><em>Big future.</em></h1><p>Track your learning, college work, internship and health in one place. Sign in to sync between your phone and laptop.</p><div class="auth-note">You can also use the app locally without an account. Cloud sync becomes available after Supabase setup.</div></div>
+    <form id="authForm" class="auth-form">
+      <h2 id="authHeading">Create your account</h2>
+      <label>Email<input id="authEmail" type="email" required placeholder="you@example.com"></label>
+      <label>Password<input id="authPassword" type="password" required minlength="6" placeholder="At least 6 characters"></label>
+      <button class="btn btn-primary full" type="submit" id="authSubmit">Sign up</button>
+      <button class="text-btn" type="button" id="authToggle">Already have an account? Sign in</button>
+      <p id="authMessage" class="form-message"></p>
+      <button class="btn btn-outline full" type="button" id="localModeBtn">Continue without cloud account</button>
+    </form>
+  </section>
+
+  <section id="appPanel" class="hidden">
+    <div class="welcome-row"><div><span class="eyebrow" id="todayLabel">YOUR DAILY CHECK-IN</span><h1>Welcome back, Mikku <span>♡</span></h1><p class="muted">Consistency over perfection. Let's make today count.</p></div><div class="date-chip" id="todayDate"></div></div>
+    <nav class="tabs" aria-label="Main navigation">
+      <button class="tab active" data-page="dashboard">Overview</button><button class="tab" data-page="daily">Daily tasks</button><button class="tab" data-page="schedule">Timetable</button><button class="tab" data-page="trackers">Trackers</button><button class="tab" data-page="exams">Exams</button><button class="tab" data-page="history">History</button><button class="tab" data-page="settings">Backup & settings</button>
+    </nav>
+
+    <section class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <article class="stat-card purple"><span>Today's completion</span><strong id="todayPercent">0%</strong><div class="mini-track"><i id="todayProgressBar"></i></div><small id="todayCount">0 of 0 tasks</small></article>
+        <article class="stat-card mint"><span>This week's completion</span><strong id="weekPercent">0%</strong><div class="mini-track"><i id="weekProgressBar"></i></div><small id="weekCount">0 tasks completed</small></article>
+        <article class="stat-card peach"><span>DSA topics completed</span><strong id="dsaTotal">0/12</strong><small>Learn → practise → explain</small></article>
+        <article class="stat-card blue"><span>Study time this week</span><strong id="studyHours">0h</strong><small>From your study log</small></article>
+      </div>
+      <div class="two-col">
+        <article class="panel"><div class="section-heading"><div><span class="eyebrow">TODAY</span><h2>Your focus</h2></div><button class="small-link" data-go="daily">Open checklist →</button></div><div id="dashboardTasks" class="compact-list"></div></article>
+        <article class="panel"><div class="section-heading"><div><span class="eyebrow">UP NEXT</span><h2>Important dates</h2></div><button class="small-link" data-go="exams">View all →</button></div><div id="upcomingEvents"></div></article>
+      </div>
+      <article class="panel"><div class="section-heading"><div><span class="eyebrow">YOUR WEEK</span><h2>Daily completion</h2></div><span class="muted small" id="weekRange"></span></div><div id="weekChart" class="week-chart"></div></article>
+      <article class="quote-card"><span>✦ A reminder for you</span><p id="quoteText">You don't have to finish everything today. Just do the next right thing.</p></article>
+    </section>
+
+    <section class="page" id="page-daily">
+      <div class="page-heading"><div><span class="eyebrow">DAILY EXECUTION</span><h2>Today's checklist</h2><p class="muted">Tick a task when it is genuinely complete. Your history is saved by date.</p></div><div class="date-chip" id="dailyDate"></div></div>
+      <div class="panel"><div class="progress-heading"><strong id="dailyProgressText">0% completed</strong><span class="muted" id="dailyTaskCount">0/0</span></div><div class="progress-track"><i id="dailyBar"></i></div><div id="dailyTaskList"></div></div>
+      <div class="panel"><h3>Add a task for today</h3><form id="addTaskForm" class="inline-form"><input id="newTaskTitle" required maxlength="90" placeholder="e.g. Revise DBMS normalization"><select id="newTaskCategory"><option>DSA</option><option>Aptitude</option><option>Academics</option><option>Internship</option><option>English</option><option>Development</option><option>Health</option><option>Core CS</option><option>Other</option></select><button class="btn btn-primary">Add task</button></form></div>
+      <div class="panel"><h3>Log focused study time</h3><form id="studyForm" class="inline-form"><select id="studyCategory"><option>DSA</option><option>Aptitude</option><option>Academics</option><option>Internship</option><option>Development</option><option>Core CS</option><option>English</option></select><input id="studyMinutes" type="number" min="1" max="600" required placeholder="Minutes"><input id="studyNote" maxlength="100" placeholder="What did you study?"><button class="btn btn-primary">Save time</button></form><p class="muted small" id="studyMessage"></p></div>
+    </section>
+
+    <section class="page" id="page-schedule">
+      <div class="page-heading"><div><span class="eyebrow">YOUR ROUTINE</span><h2>Weekly timetable</h2><p class="muted">Your suggested schedule. Adjust it as classes and internship sessions change.</p></div></div>
+      <div id="scheduleGrid" class="schedule-grid"></div>
+      <div class="panel"><h3>Timetable note</h3><p class="muted">The schedule is a guide, not a punishment. Keep internship sessions flexible and protect your sleep, meals and doctor's health advice.</p></div>
+    </section>
+
+    <section class="page" id="page-trackers">
+      <div class="page-heading"><div><span class="eyebrow">SKILL DEVELOPMENT</span><h2>Your trackers</h2><p class="muted">Record progress across the areas that matter.</p></div></div>
+      <div class="panel"><div class="section-heading"><div><h3>Java DSA roadmap</h3><p class="muted small">Mark a topic complete only when you can solve and explain problems independently.</p></div><strong id="dsaProgressLabel">0%</strong></div><div class="progress-track"><i id="dsaProgressBar"></i></div><div id="dsaList" class="tracker-list"></div></div>
+      <div class="two-col">
+        <div class="panel"><h3>🎯 Aptitude practice</h3><form id="aptitudeForm" class="stack-form"><label>Topic<input id="aptTopic" required placeholder="e.g. Percentages"></label><label>Questions attempted<input id="aptAttempted" type="number" min="0" required></label><label>Correct answers<input id="aptCorrect" type="number" min="0" required></label><label>Time spent (minutes)<input id="aptMinutes" type="number" min="0" required></label><button class="btn btn-primary">Save aptitude session</button></form><div id="aptitudeHistory" class="history-list"></div></div>
+        <div class="panel"><h3>💼 Internship – Axlero</h3><form id="internshipForm" class="stack-form"><label>Task / contribution<input id="internTask" required placeholder="e.g. Implemented API validation"></label><label>Status<select id="internStatus"><option>In progress</option><option>Completed</option><option>Blocked</option></select></label><label>Time spent (minutes)<input id="internMinutes" type="number" min="0" value="60"></label><label>What did you learn?<textarea id="internLearn" rows="2" placeholder="Write a short note"></textarea></label><button class="btn btn-primary">Save internship update</button></form><div id="internshipHistory" class="history-list"></div></div>
+      </div>
+      <div class="two-col">
+        <div class="panel"><h3>📚 Academic progress</h3><form id="academicForm" class="stack-form"><label>Subject<input id="academicSubject" required placeholder="Subject name"></label><label>Topic completed<input id="academicTopic" required placeholder="e.g. Unit 2 – timers"></label><label>Progress<select id="academicStatus"><option>Studied</option><option>Revised</option><option>Practised questions</option></select></label><button class="btn btn-primary">Save academic progress</button></form><div id="academicHistory" class="history-list"></div></div>
+        <div class="panel"><h3>🗣️ English practice</h3><form id="englishForm" class="stack-form"><label>Practice activity<input id="englishActivity" required placeholder="e.g. Explained my project aloud"></label><label>Minutes<input id="englishMinutes" type="number" min="1" value="20" required></label><label>Reflection<textarea id="englishReflection" rows="2" placeholder="What went well? What to improve?"></textarea></label><button class="btn btn-primary">Save English practice</button></form><div id="englishHistory" class="history-list"></div></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-exams">
+      <div class="page-heading"><div><span class="eyebrow">STAY AHEAD</span><h2>Exams & milestones</h2><p class="muted">Countdowns use the dates you provided. Edit them if your college changes the schedule.</p></div></div>
+      <div id="eventCards" class="event-grid"></div>
+      <div class="panel"><div class="section-heading"><h3>Exam preparation checklist</h3><span class="muted small">Saved across days</span></div><div id="examPrepList"></div></div>
+      <div class="panel"><h3>Add your own exam or deadline</h3><form id="eventForm" class="inline-form"><input id="eventName" required placeholder="Event name"><input id="eventDate" type="date" required><select id="eventType"><option>Academic</option><option>Placement</option><option>Personal</option></select><button class="btn btn-primary">Add event</button></form></div>
+    </section>
+
+    <section class="page" id="page-history">
+      <div class="page-heading"><div><span class="eyebrow">LOOK HOW FAR YOU'VE COME</span><h2>Progress history</h2><p class="muted">Historical daily completion, weekly averages and study time.</p></div></div>
+      <div class="panel"><div class="section-heading"><h3>Last 30 days</h3><button id="exportCsvBtn" class="btn btn-outline">Export CSV</button></div><div class="table-scroll"><table><thead><tr><th>Date</th><th>Completed</th><th>Total</th><th>Progress</th><th>Study time</th></tr></thead><tbody id="historyTable"></tbody></table></div></div>
+      <div class="panel"><h3>Weekly summary</h3><div id="weeklyHistory"></div></div>
+    </section>
+
+    <section class="page" id="page-settings">
+      <div class="page-heading"><div><span class="eyebrow">YOUR DATA, YOUR CONTROL</span><h2>Backup & settings</h2><p class="muted">Export a backup regularly. Cloud sync is an extra copy, not a replacement for backups.</p></div></div>
+      <div class="two-col">
+        <div class="panel"><h3>☁️ Cloud connection</h3><p id="cloudInfo" class="muted">Local mode is active. Configure Supabase to enable sign-in and cross-device sync.</p><button id="syncNowBtn" class="btn btn-primary">Sync now</button><p id="syncMessage" class="small muted"></p></div>
+        <div class="panel"><h3>📦 Backup & restore</h3><p class="muted small">Download a JSON backup of your tasks, trackers, history and settings.</p><button id="backupBtn" class="btn btn-primary">Download backup</button><label class="file-label">Restore backup<input id="restoreInput" type="file" accept=".json,application/json"></label><p id="backupMessage" class="small muted"></p></div>
+      </div>
+      <div class="panel"><h3>Account & privacy</h3><p class="muted small">Your data is stored locally in this browser and, after sign-in, in your private Supabase account. Never share your password or Supabase service-role key.</p><button id="clearLocalBtn" class="btn btn-danger">Clear local app data</button></div>
+    </section>
+  </section>
+</main>
+<div id="toast" class="toast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
